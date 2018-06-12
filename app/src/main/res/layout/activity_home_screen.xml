@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeScreen" 
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_primary_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_collar_text"
+        android:alpha="1.0">
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_secondary_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_collar_text"
+        android:alpha="0.0">
+
+
+
+    </RelativeLayout>
+
+
+    <!-- Collar Text -->
+    <com.excel.customviews.ScrollTextView
+        android:id="@+id/tv_collar_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textSize="27dp"
+        android:background="@drawable/submenu_bg1"
+        android:layout_alignParentBottom="true" />
+    <!--/ Collar Text -->
+
+
+
+</RelativeLayout>
