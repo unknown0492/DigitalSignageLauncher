@@ -97,8 +97,6 @@ public class HomeScreen extends AppCompatActivity {
         tv_collar_text.startScroll();
     }
 
-
-
     public JSONObject getSampleMeta( int index ){
         JSONObject jsonObject = new JSONObject();
 
