@@ -69,76 +69,46 @@ public class SlideFlipper {
         is_even = !is_even;
         Log.d( TAG,  ((is_even)?"Even":"Odd") + "-" +currentIndex );
 
-
-        if( is_even ){
-            // Log.e( TAG, "inside if" );
-
-            // Fade out primary
-            ObjectAnimator.ofFloat( secondaryLayer, "alpha", 1.0f, 0.0f ).setDuration( 1000 ).start();
-            // Fade in secondary
-            ObjectAnimator.ofFloat( primaryLayer, "alpha", 0.0f, 1.0f ).setDuration( 1000 ).start();
-
-            primaryLayerVisible = true;
-            secondaryLayerVisible = false;
-
-        }
-        else{
-            // Log.e( TAG, "inside else" );
-
-            // Fade out secondary
-            ObjectAnimator.ofFloat( primaryLayer, "alpha", 1.0f, 0.0f ).setDuration( 1000 ).start();
-            // Fade in primary
-            ObjectAnimator.ofFloat( secondaryLayer, "alpha", 0.0f, 1.0f ).setDuration( 1000 ).start();
-
-            primaryLayerVisible = false;
-            secondaryLayerVisible = true;
-        }
-
         // Get current slide information
-        Slide currentSlide = getCurrentSlide();
+        final Slide currentSlide = getCurrentSlide();
+        View view = generateViewForSlide( currentSlide );
 
-        View viewPrimary = generateViewForSlide( currentSlide );
-
-        if( !is_even ) {
+        if( !is_even ){ // Odd case --> Set the content on the Primary Layer
             primaryLayer.removeAllViews();
             primaryLayer.invalidate();
-            primaryLayer.addView( viewPrimary ); // for odd
+            primaryLayer.addView( view );
         }
-        else {
+        else{   // Even case --> Set the content on the Secondary Layer
             secondaryLayer.removeAllViews();
             secondaryLayer.invalidate();
-            secondaryLayer.addView( viewPrimary ); // for even
+            secondaryLayer.addView( view );
         }
 
-        // Get Next slide information
-        Slide nextSlide = getNextSlide();
+        // Run after a delay of 1 second, so that the loading of stuffs on the slides would finish in this duration
+        new Handler().postDelayed( new Runnable() {
 
-        View viewSecondary = generateViewForSlide( nextSlide );
+            @Override
+            public void run() {
 
-        if( !is_even ) {
-            secondaryLayer.removeAllViews();
-            secondaryLayer.invalidate();
-            secondaryLayer.addView( viewSecondary );  // for odd
-        }
-        else {
-            primaryLayer.removeAllViews();
-            primaryLayer.invalidate();
-            primaryLayer.addView( viewSecondary );  // for even
-        }
+                if( !is_even ){ // Odd case --> Hide the secondary layer, show the primary layer
+                    ObjectAnimator.ofFloat( secondaryLayer, "alpha", 1.0f, 0.0f ).setDuration( 1000 ).start();
+                    ObjectAnimator.ofFloat( primaryLayer, "alpha", 0.0f, 1.0f ).setDuration( 1000 ).start();
+                }
+                else{   // Even case --> Hide the primary layer, show the secondary layer
+                    ObjectAnimator.ofFloat( primaryLayer, "alpha", 1.0f, 0.0f ).setDuration( 1000 ).start();
+                    ObjectAnimator.ofFloat( secondaryLayer, "alpha", 0.0f, 1.0f ).setDuration( 1000 ).start();
+                }
 
-        if( primaryLayerVisible ){
-            Log.i( TAG, "Primary Layer is visible" );
-            //currentSlide.get
-        }
-        else{
-            Log.i( TAG, "Secondary Layer is visible" );
-        }
+                // Do the scheduling for the next slide
+                slideFlippingHandler.postDelayed( slideFlippingRunnable, currentSlide.getDuration() );
 
-        // Increment to next slide
-        nextSlide();
+                // Increment to next slide
+                nextSlide();
 
-        // Do the scheduling for the next slide
-        slideFlippingHandler.postDelayed( slideFlippingRunnable, nextSlide.getDuration() );
+            }
+
+        }, 1000 );
+
     }
 
     private View generateViewForSlide( Slide slide ){
